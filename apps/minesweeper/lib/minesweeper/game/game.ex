@@ -3,9 +3,12 @@ defmodule Minesweeper.Game do
 
   @moduledoc """
   """
+
+  alias Minesweeper.Game.Battlestate
+
   # CLIENT
   def start_link(game_id, opts \\ %{}) do
-    GenServer.start_link(__MODULE__, Minesweeper.Game.Battlestate.init(opts), name: via_tuple(game_id))
+    GenServer.start_link(__MODULE__, Battlestate.init(opts), name: via_tuple(game_id))
   end
 
   def battlefield(game_id) do
@@ -21,7 +24,7 @@ defmodule Minesweeper.Game do
     {:ok, state}
   end
 
-  def handle_call(:battlefield, _from, deck) do
-    {:reply, deck, deck}
+  def handle_call(:battlefield, _from, state) do
+    {:reply, state, state}
   end
 end
