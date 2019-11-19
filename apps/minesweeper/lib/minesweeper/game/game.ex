@@ -8,7 +8,15 @@ defmodule Minesweeper.Game do
 
   # CLIENT
   def start_link(game_id, opts \\ %{}) do
-    GenServer.start_link(__MODULE__, Battlestate.init(opts), name: via_tuple(game_id))
+    case GenServer.start_link(__MODULE__, Battlestate.init(opts), name: via_tuple(game_id)) do
+      {:ok, pid} ->
+        {:ok, pid}
+
+      {:error, {:already_started, pid}} ->
+        # TODO change state
+        IO.inspect battlefield(game_id)
+        {:ok, pid}
+    end
   end
 
   def battlefield(game_id) do
