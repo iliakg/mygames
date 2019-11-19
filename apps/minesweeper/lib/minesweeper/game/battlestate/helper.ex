@@ -4,18 +4,18 @@ defmodule Minesweeper.Game.Battlestate.Helper do
 
   # GAME FUNCTIONS
 
-  @spec validate_opts(%{bombs_count: any, x: any, y: any}) :: %{
+  @spec validate_opts(%{bombs_count: any, cols: any, rows: any}) :: %{
           bombs_count: any,
-          x: any,
-          y: any
+          cols: any,
+          rows: any
         }
   def validate_opts(opts) do
-    %{x: opts.x, y: opts.y, bombs_count: opts.bombs_count}
+    %{cols: opts.cols, rows: opts.rows, bombs_count: opts.bombs_count}
   end
 
   @spec lets_start(map(), String.t()) :: {map(), map()}
   def lets_start(opts, position) do
-    minefield = init_bombs(init_field(opts.x, opts.y), position, opts.bombs_count)
+    minefield = init_bombs(init_field(opts.cols, opts.rows), position, opts.bombs_count)
     {opened_cells, _} = change_cell({%{}, %{}}, minefield, position)
 
     {minefield, opened_cells}

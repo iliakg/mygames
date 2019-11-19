@@ -7,6 +7,7 @@ defmodule Minesweeper.Game do
   alias Minesweeper.Game.Battlestate
 
   # CLIENT
+  @spec start_link(any, %{bombs_count: pos_integer(), x: pos_integer(), y: pos_integer()}) :: {:ok, any}
   def start_link(game_id, opts \\ %{}) do
     case GenServer.start_link(__MODULE__, Battlestate.init(opts), name: via_tuple(game_id)) do
       {:ok, pid} ->
@@ -14,7 +15,7 @@ defmodule Minesweeper.Game do
 
       {:error, {:already_started, pid}} ->
         # TODO change state
-        IO.inspect battlefield(game_id)
+        IO.inspect "already_started"
         {:ok, pid}
     end
   end

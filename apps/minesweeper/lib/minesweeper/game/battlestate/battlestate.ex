@@ -5,8 +5,8 @@ defmodule Minesweeper.Game.Battlestate do
 
   alias Minesweeper.Struct.Battlestate
 
-  # Minesweeper.Game.Battlestate.init(%{x: 4, y: 3, bombs_count: 3})
-  @spec init(%{bombs_count: pos_integer(), x: pos_integer(), y: pos_integer()}) :: Battlestate.t()
+  # Minesweeper.Game.Battlestate.init(%{cols: 4, rows: 3, bombs_count: 3})
+  @spec init(%{bombs_count: pos_integer(), cols: pos_integer(), rows: pos_integer()}) :: Battlestate.t()
   def init(opts \\ %{}) do
     %Battlestate{
       status: :init,
