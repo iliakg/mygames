@@ -13,26 +13,26 @@ defmodule Minesweeper.Game.Battlestate.Helper do
     %{x: opts.x, y: opts.y, bombs_count: opts.bombs_count}
   end
 
-  @spec lets_start(map(), String.t()) :: [map()]
+  @spec lets_start(map(), String.t()) :: {map(), map()}
   def lets_start(opts, position) do
     minefield = init_bombs(init_field(opts.x, opts.y), position, opts.bombs_count)
-    opened_cells = change_cell(%{}, minefield, position)
+    {opened_cells, _} = change_cell({%{}, %{}}, minefield, position)
 
-    [minefield, opened_cells]
+    {minefield, opened_cells}
   end
 
-  @spec change_cell(map(), map(), String.t()) :: map()
-  def change_cell(opened_cells, minefield, cell_position) do
+  @spec change_cell({map(), map()}, map(), String.t()) :: {map(), map()}
+  def change_cell({opened_cells, current_state} = state, minefield, cell_position) do
     case opened_cells[cell_position] do
       nil ->
         case minefield[cell_position] do
           nil ->
-            opened_cells
+            state
 
           0 ->
             [x | [y]] = location(cell_position)
 
-            Map.put(opened_cells, cell_position, 0)
+            {Map.put(opened_cells, cell_position, 0), Map.put(current_state, cell_position, 0)}
             |> change_cell(minefield, location(x - 1, y - 1))
             |> change_cell(minefield, location(x - 1, y))
             |> change_cell(minefield, location(x - 1, y + 1))
@@ -43,11 +43,14 @@ defmodule Minesweeper.Game.Battlestate.Helper do
             |> change_cell(minefield, location(x + 1, y + 1))
 
           val ->
-            Map.put(opened_cells, cell_position, val)
+            {
+              Map.put(opened_cells, cell_position, val),
+              Map.put(current_state, cell_position, val)
+            }
         end
 
       _ ->
-        opened_cells
+        state
     end
   end
 
