@@ -5,10 +5,10 @@ defmodule Minesweeper.Struct.Battlestate do
   @type t :: %__MODULE__{
           opts: map(),
           minefield: map(),
-          cleared_minefield: map()
+          opened_cells: map()
         }
 
   defstruct opts: %{},
             minefield: %{},
-            cleared_minefield: %{}
+            opened_cells: %{}
 end

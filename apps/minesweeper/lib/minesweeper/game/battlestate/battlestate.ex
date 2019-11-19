@@ -13,13 +13,13 @@ defmodule Minesweeper.Game.Battlestate do
     bombs_count = 4
     start_position = "2_1"
 
-    bombs_minefield = init_bombs(init_field(x, y, 0), start_position, bombs_count)
-    cleared_minefield = open_cell(init_field(x, y, "-"), bombs_minefield, start_position)
+    bombs_minefield = init_bombs(init_field(x, y), start_position, bombs_count)
+    opened_cells = open_cell(%{}, bombs_minefield, start_position)
 
     %Battlestate{
       opts: %{x: x, y: y, bombs_count: bombs_count, start_position: start_position},
       minefield: bombs_minefield,
-      cleared_minefield: cleared_minefield
+      opened_cells: opened_cells
     }
   end
 end
