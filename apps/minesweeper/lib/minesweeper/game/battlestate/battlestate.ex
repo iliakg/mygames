@@ -5,21 +5,49 @@ defmodule Minesweeper.Game.Battlestate do
 
   alias Minesweeper.Struct.Battlestate
 
-  # Minesweeper.Game.Battlestate.init
+  # Minesweeper.Game.Battlestate.init(%{x: 4, y: 3, bombs_count: 3})
   @spec init(any) :: Battlestate.t()
   def init(opts \\ %{}) do
-    x = 3
-    y = 3
-    bombs_count = 4
-    start_position = "2_1"
-
-    bombs_minefield = init_bombs(init_field(x, y), start_position, bombs_count)
-    opened_cells = open_cell(%{}, bombs_minefield, start_position)
-
     %Battlestate{
-      opts: %{x: x, y: y, bombs_count: bombs_count, start_position: start_position},
-      minefield: bombs_minefield,
-      opened_cells: opened_cells
+      status: "init",
+      opts: validate_opts(opts),
+      minefield: %{},
+      opened_cells: %{}
     }
+  end
+
+  @spec open_cell(Minesweeper.Struct.Battlestate.t(), String.t()) :: Battlestate.t()
+  def open_cell(%Battlestate{} = state, position) do
+    case state.status do
+      "init" ->
+        [minefield, opened_cells] = lets_start(state.opts, position)
+
+        %Battlestate{
+          status: "started",
+          opts: state.opts,
+          minefield: minefield,
+          opened_cells: opened_cells
+        }
+
+      "started" ->
+        opened_cells = change_cell(state.opened_cells, state.minefield, position)
+
+        status =
+          if opened_cells[position] == "x" do
+            "failed"
+          else
+            "started"
+          end
+
+        %Battlestate{
+          status: status,
+          opts: state.opts,
+          minefield: state.minefield,
+          opened_cells: opened_cells
+        }
+
+      _ ->
+        state
+    end
   end
 end
