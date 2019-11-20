@@ -9,14 +9,11 @@ defmodule Minesweeper.Game do
   # CLIENT
   @spec start_link(any, %{bombs_count: pos_integer(), x: pos_integer(), y: pos_integer()}) :: {:ok, any}
   def start_link(game_id, opts \\ %{}) do
-    case GenServer.start_link(__MODULE__, Battlestate.init(opts), name: via_tuple(game_id)) do
-      {:ok, pid} ->
-        {:ok, pid}
+    GenServer.start_link(__MODULE__, Battlestate.init(opts), name: via_tuple(game_id))
+  end
 
-      {:error, {:already_started, pid}} ->
-        GenServer.cast(via_tuple(game_id), {:reset_state, opts})
-        {:ok, pid}
-    end
+  def reset_state(game_id, opts) do
+    GenServer.cast(via_tuple(game_id), {:reset_state, opts})
   end
 
   def open_cell(game_id, col, row) do
@@ -27,9 +24,6 @@ defmodule Minesweeper.Game do
     GenServer.call(via_tuple(game_id), :battlefield)
   end
 
-  def opened_cells(game_id) do
-    GenServer.call(via_tuple(game_id), :opened_cells)
-  end
 
   defp via_tuple(game_id) do
     {:via, :gproc, {:n, :l, {:game_id, game_id}}}
@@ -51,9 +45,5 @@ defmodule Minesweeper.Game do
 
   def handle_call(:battlefield, _from, state) do
     {:reply, state, state}
-  end
-
-  def handle_call(:opened_cells, _from, state) do
-    {:reply, {state.status, state.opened_cells}, state}
   end
 end
