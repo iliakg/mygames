@@ -13,7 +13,7 @@ defmodule Minesweeper.Game do
   end
 
   def reset_state(game_id, opts) do
-    GenServer.cast(via_tuple(game_id), {:reset_state, opts})
+    GenServer.call(via_tuple(game_id), {:reset_state, opts})
   end
 
   def open_cell(game_id, col, row) do
@@ -24,7 +24,6 @@ defmodule Minesweeper.Game do
     GenServer.call(via_tuple(game_id), :battlefield)
   end
 
-
   defp via_tuple(game_id) do
     {:via, :gproc, {:n, :l, {:game_id, game_id}}}
   end
@@ -34,8 +33,9 @@ defmodule Minesweeper.Game do
     {:ok, state}
   end
 
-  def handle_cast({:reset_state, opts}, _state) do
-    {:noreply, Battlestate.init(opts)}
+  def handle_call({:reset_state, opts}, _from, _state) do
+    new_state = Battlestate.init(opts)
+    {:reply, new_state, new_state}
   end
 
   def handle_call({:open_cell, col, row}, _from, state) do

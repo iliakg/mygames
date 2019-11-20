@@ -14,7 +14,7 @@ config :minesweeper_api,
 config :minesweeper_api, MinesweeperApiWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Kgea7MA9ljlHJSVOIqFrnf/k0XuQnrJtZXMjKM4Y8rSDdXclVE4N7QObjfJoS+BM",
-  render_errors: [view: MinesweeperApiWeb.ErrorView, accepts: ~w(json)]
+  render_errors: [view: MinesweeperApiWeb.ErrorsView, accepts: ~w(json)]
 
 # Configures Elixir's Logger
 config :logger, :console,

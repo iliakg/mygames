@@ -11,6 +11,7 @@ defmodule MinesweeperApiWeb.Router do
 
     scope "/minesweeper" do
       post "/", GamesController, :init_game
+      post "/reset_game", GamesController, :reset_game
     end
   end
 end

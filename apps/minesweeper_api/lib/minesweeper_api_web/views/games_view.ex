@@ -7,4 +7,11 @@ defmodule MinesweeperApiWeb.GamesView do
       opened_cells: opened_cells
     }
   end
+
+  def render("reset_game.json", %{status: status, opened_cells: opened_cells}) do
+    %{
+      status: status,
+      opened_cells: opened_cells
+    }
+  end
 end
