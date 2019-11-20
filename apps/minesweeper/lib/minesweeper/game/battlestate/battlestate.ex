@@ -16,8 +16,9 @@ defmodule Minesweeper.Game.Battlestate do
     }
   end
 
-  @spec open_cell(Battlestate.t(), String.t()) :: {map(), Battlestate.t()}
-  def open_cell(%Battlestate{} = state, position) do
+  @spec open_cell(Battlestate.t(), pos_integer(), pos_integer()) :: {map(), Battlestate.t()}
+  def open_cell(%Battlestate{} = state, col, row) do
+    position = location(col, row)
     case state.status do
       :init ->
         {minefield, opened_cells} = lets_start(state.opts, position)
@@ -25,14 +26,14 @@ defmodule Minesweeper.Game.Battlestate do
         {
           opened_cells,
           %Battlestate{
-            status: :started,
+            status: :active,
             opts: state.opts,
             minefield: minefield,
             opened_cells: opened_cells
           }
         }
 
-      :started ->
+      :active ->
         {opened_cells, current_state} =
           change_cell({state.opened_cells, %{}}, state.minefield, position)
 
@@ -40,7 +41,7 @@ defmodule Minesweeper.Game.Battlestate do
           if opened_cells[position] == "x" do
             :failed
           else
-            :started
+            :active
           end
 
         {
