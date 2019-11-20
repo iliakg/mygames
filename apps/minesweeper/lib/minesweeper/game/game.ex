@@ -15,7 +15,6 @@ defmodule Minesweeper.Game do
 
       {:error, {:already_started, pid}} ->
         # TODO change state
-        IO.inspect "already_started"
         {:ok, pid}
     end
   end
