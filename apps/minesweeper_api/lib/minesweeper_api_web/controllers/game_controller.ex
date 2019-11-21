@@ -63,8 +63,8 @@ defmodule MinesweeperApiWeb.GamesController do
 
   defp prepare_params(rows, cols, bombs_count) do
     try do
-      with rows when rows > 0 <- String.to_integer(rows),
-           cols when cols > 0 <- String.to_integer(cols),
+      with rows when rows > 0 and rows <= 500 <- String.to_integer(rows),
+           cols when cols > 0 and cols <= 500 <- String.to_integer(cols),
            bombs_count when bombs_count > 0 <- String.to_integer(bombs_count),
            bombs_count <- validate_bombs(rows, cols, bombs_count) do
         %{rows: rows, cols: cols, bombs_count: bombs_count}
