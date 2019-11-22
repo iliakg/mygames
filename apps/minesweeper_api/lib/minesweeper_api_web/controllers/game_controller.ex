@@ -53,8 +53,7 @@ defmodule MinesweeperApiWeb.GamesController do
   end
 
   def open_cell(conn, %{"game_id" => game_id, "row" => row, "col" => col}) do
-    {status, opened_cells} =
-      Minesweeper.Game.open_cell(game_id, String.to_integer(col), String.to_integer(row))
+    {status, opened_cells} = Minesweeper.Game.open_cell(game_id, col, row)
 
     conn
     |> put_status(:ok)
@@ -63,20 +62,28 @@ defmodule MinesweeperApiWeb.GamesController do
 
   defp prepare_params(rows, cols, bombs_count) do
     try do
-      with rows when rows > 0 and rows <= 500 <- String.to_integer(rows),
-           cols when cols > 0 and cols <= 500 <- String.to_integer(cols),
-           bombs_count when bombs_count > 0 <- String.to_integer(bombs_count),
+      with rows when rows > 0 and rows <= 500 <- to_int(rows),
+           cols when cols > 0 and cols <= 500 <- to_int(cols),
+           bombs_count when bombs_count > 0 <- to_int(bombs_count),
            bombs_count <- validate_bombs(rows, cols, bombs_count) do
         %{rows: rows, cols: cols, bombs_count: bombs_count}
       else
         _ ->
+          IO.inspect("with error")
           %{rows: 9, cols: 9, bombs_count: 10}
       end
     rescue
       _ ->
+        IO.inspect("parse error")
         %{rows: 9, cols: 9, bombs_count: 10}
     end
   end
+
+  defp to_int(value) when is_binary(value),
+    do: String.to_integer(value)
+
+    defp to_int(value),
+    do: value
 
   defp validate_bombs(rows, cols, bombs_count) do
     cond do
